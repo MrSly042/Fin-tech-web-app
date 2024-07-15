@@ -1,0 +1,11 @@
+<!-- start.html -->
+<form id="hidden-form" method="post" action="{{ url_for('dash') }}" style="display: none;">
+    <!-- Add any necessary input fields here -->
+    <!-- For example: <input type="hidden" name="key" value="value"> -->
+</form>
+<script>
+    // Automatically submit the form when the page loads
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('hidden-form').submit();
+    });
+</script>

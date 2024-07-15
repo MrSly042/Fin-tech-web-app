@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'dash_stlye.css')}}">
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="http://127.0.0.1:5000/login">
+            <img src="{{url_for('static', filename = 'logo.png')}}" width="50px" height="50px" alt="Logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="http://127.0.0.1:5000">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://127.0.0.1:5000/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://127.0.0.1:5000/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <span class="use_greet"> 
+        {{time_day}} {{user_get}}
+      </span>
+
+      <div class="cart">
+        <h2> Nimb-Fi Balance</h2>
+        <p>${{acct_balance}}</p>
+        <p> Available </p>
+      </div>
+
+      <div class="right_float_child">
+          <button id="send_btn">
+          <span>Send</span>
+        </button>
+          <br><br>
+        
+        <button >
+          <span>Transaction History</span>
+        </button>
+      </div>
+
+      <div class="small_btns">
+        <button>
+          <span>Request</span>
+        </button> <br><br>
+
+          <button id="fundinput_amt">
+            <span>Fund Account</span>
+          </button>
+
+      </div>
+
+      <!-- The transacts popups -->
+
+      <div id="send_mon_modal" class="modal">
+          <div class="modal-content">
+              <h2>Transaction Details </h2>
+              <form id="send_modalForm">
+                  <label for="inputField1" style="margin-right: 32px;">Receiver: </label>
+                  <input type="email" style="width:200px;" id="input_email" placeholder="Recipient's email" required><br><br>
+
+                  <label for="inputField2" style="margin-right: 10px;">Amount ($): </label>
+                  <input type="number" style="width:200px;" id="input_amt" placeholder="Enter amount to send" required><br><br><br><br>
+                  <div class="modal-buttons">
+                      <button type="button" id="cancelBtn">Cancel</button>
+                      <button type="submit">Submit</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+
+      <!-- The fund account popups -->
+      <div id="fund_modal" class="modal">
+        <div class="modal-content">
+            <p><h2>Fund Account </h2></p>
+            <form id="fund_modalForm">
+
+                <label for="fundinput_amt" style="margin-right: 10px;">Amount ($): </label>
+                <input type="number" style="width:200px;" id="fund_text_input_amt" placeholder="Enter amount to send" required><br><br><br><br>
+                <div class="modal-buttons">
+                    <button type="button" id="cancelBtn">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+          </div>
+      </div>
+  
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+              {% if 'success' in msg %}
+              <div class="success">
+                  <div class="success__icon">
+                    <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="https://www.w3.org/2000/svg"><path clip-rule="evenodd" d="m12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm4.768 9.14c.0878-.1004.1546-.21726.1966-.34383.0419-.12657.0581-.26026.0477-.39319-.0105-.13293-.0475-.26242-.1087-.38085-.0613-.11844-.1456-.22342-.2481-.30879-.1024-.08536-.2209-.14938-.3484-.18828s-.2616-.0519-.3942-.03823c-.1327.01366-.2612.05372-.3782.1178-.1169.06409-.2198.15091-.3027.25537l-4.3 5.159-2.225-2.226c-.1886-.1822-.4412-.283-.7034-.2807s-.51301.1075-.69842.2929-.29058.4362-.29285.6984c-.00228.2622.09851.5148.28067.7034l3 3c.0983.0982.2159.1748.3454.2251.1295.0502.2681.0729.4069.0665.1387-.0063.2747-.0414.3991-.1032.1244-.0617.2347-.1487.3236-.2554z" fill="#393a37" fill-rule="evenodd"></path></svg>
+                  </div>
+                  <div class="success__title">{{msg[8:]}}</div>
+              </div>
+              {% elif 'error' in msg %}
+              <div class="error">
+                  <div class="error__icon">
+                    <svg
+                        class="error-svg"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        aria-hidden="true"
+                    >
+                        <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd"
+                        ></path>
+                    </svg>
+                  </div>
+                  <div class="error__title">{{msg[6:]}}</div>
+              </div>
+                  {% else %}
+              <div class="info">
+                  <div class="info__icon">
+                    <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="info-svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      fill-rule="evenodd"
+                    ></path>
+                  </svg>
+                  </div>
+                  <div class="info__title">{{msg[5:]}}</div>
+              </div>
+
+              {% endif %}
+            {%endfor%}
+          {% endif %}
+    {% endwith %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script src="{{url_for('static', filename = 'behave.js')}}"></script>
+  </body>
+</html>
